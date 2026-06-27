@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VAULT</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cinzel:wght@700&family=Inter:wght@400;700;900&family=Oswald:wght@700&family=Outfit:wght@700&family=Playfair+Display:ital,wght@0,700;1,700&family=Press+Start+2P&family=Roboto:wght@700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Titlebar -->
+  <div id="titlebar" data-tauri-drag-region>
+    <div id="titlebar-line-left" data-tauri-drag-region></div>
+    <span id="app-title" data-tauri-drag-region>VAULT</span>
+    <div id="titlebar-line-right" data-tauri-drag-region></div>
+    <div id="titlebar-controls">
+      <button id="btn-minimize">─</button>
+      <button id="btn-maximize">⛶</button>
+      <button id="btn-close">✕</button>
+    </div>
+  </div>
+
+  <!-- Dual wallpapers for crossfade -->
+  <div id="bg-wallpaper-1"></div>
+  <div id="bg-wallpaper-2"></div>
+  <div id="bg-overlay"></div>
+
+  <!-- Toast container -->
+  <div id="toast-container"></div>
+
+  <!-- Main layout -->
+  <div id="app">
+
+    <!-- CATEGORIES DOTS -->
+    <div id="categories-panel">
+      <div class="category-dot active" data-index="0" data-label="ALL GAMES"></div>
+      <div class="category-dot" data-index="1" data-label="RECENTLY PLAYED"></div>
+    </div>
+
+    <!-- LEFT: Centered logo sidebar -->
+    <div id="game-list-panel">
+      <button id="btn-add-game" title="Add Game (Y)">+</button>
+      <div id="game-list-viewport">
+        <div id="game-list"></div>
+      </div>
+    </div>
+
+    <!-- DETAILS PANEL -->
+    <div id="details-panel" class="hidden">
+      <div id="details-inner">
+        <div id="details-logo-area">
+          <img id="details-logo-img" src="" alt="" />
+        </div>
+        <div id="details-content">
+          <div id="details-game-name-fallback"></div>
+
+          <div id="details-stats">
+            <div class="stat-block">
+              <div class="stat-value" id="stat-playtime">0h 0m</div>
+              <div class="stat-label">PLAYTIME</div>
+            </div>
+            <div class="stat-block">
+              <div class="stat-value" id="stat-sessions">0</div>
+              <div class="stat-label">SESSIONS</div>
+            </div>
+            <div class="stat-block">
+              <div class="stat-value" id="stat-last-played">Never</div>
+              <div class="stat-label">LAST PLAYED</div>
+            </div>
+            <div class="stat-block">
+              <select id="details-status-select" class="glass-select status-select">
+                <option value="Backlog">Backlog</option>
+                <option value="Playing">Playing</option>
+                <option value="On Hold">On Hold</option>
+                <option value="Completed">Completed</option>
+                <option value="Dropped">Dropped</option>
+              </select>
+              <div class="stat-label">STAGE</div>
+            </div>
+          </div>
+
+          <div id="details-actions">
+            <!-- Pill launch button — Performance/Xbox Mode -->
+            <button class="pill-btn xbox-pill" id="btn-launch-xbox">
+              <div class="pill-inner">
+                <div class="pill-spacer"></div>
+                <div class="pill-circle">
+                  <div class="pill-circle-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 16">
+                      <path fill="currentColor" d="M12.175 9H0V7H12.175L6.575 1.4L8 0L16 8L8 16L6.575 14.6L12.175 9Z" />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+              <div class="pill-label">LAUNCH</div>
+            </button>
+
+            <!-- Edit — match pill style -->
+            <button class="pill-btn edit-pill" id="btn-edit-game">
+              <div class="pill-inner">
+                <div class="pill-spacer"></div>
+                <div class="pill-circle">
+                  <div class="pill-circle-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+              <div class="pill-label">EDIT</div>
+            </button>
+
+            <!-- Restore Save — match pill style -->
+            <button class="pill-btn restore-pill" id="btn-restore-save" style="display:none;">
+              <div class="pill-inner">
+                <div class="pill-spacer"></div>
+                <div class="pill-circle">
+                  <div class="pill-circle-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+              <div class="pill-label">RESTORE</div>
+            </button>
+
+            <!-- Backup Save — match pill style -->
+            <button class="pill-btn backup-pill" id="btn-backup-save" style="display:none;">
+              <div class="pill-inner">
+                <div class="pill-spacer"></div>
+                <div class="pill-circle">
+                  <div class="pill-circle-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+              <div class="pill-label">BACKUP</div>
+            </button>
+
+            <!-- Custom Animated × remove button -->
+            <button class="new-remove-btn" id="btn-delete-game" title="Remove">
+              <p>×</p>
+              <span></span>
+              <span></span>
+              <span></span>
+              <span></span>
+            </button>
+          </div>
+          
+          <button id="btn-close-details">← BACK</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty state -->
+    <div id="empty-state">
+      <div id="empty-icon">⬡</div>
+      <div id="empty-title">NO GAMES YET</div>
+      <div id="empty-sub">Press + to add your first game</div>
+    </div>
+
+  </div>
+
+  <!-- ADD / EDIT MODAL -->
+  <div id="modal-overlay" class="hidden">
+    <div id="modal" class="glass-panel">
+      <div id="modal-title">ADD GAME</div>
+      <div id="scan-folder-container" style="display: flex; gap: 10px; margin-bottom: 20px;">
+        <button id="btn-scan-folder" class="secondary-btn" style="flex: 1; padding: 10px; border-radius: 8px; font-weight: bold;">
+          <svg style="width:16px; height:16px; vertical-align:middle; margin-right:5px;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+          Scan Folder for Games
+        </button>
+      </div>
+      <div class="field-group">
+        <label style="display: flex; justify-content: space-between; align-items: center;">
+          Game Name
+          <button id="btn-autofill" class="glass-btn" style="padding: 4px 10px; font-size: 10px; border-radius: 4px; display: none;">
+            ✨ Auto-Fill Metadata
+          </button>
+        </label>
+        <input type="text" id="input-name" placeholder="e.g. Red Dead Redemption 2" autocomplete="off" />
+      </div>
+      <div class="field-group">
+        <label>Title Style <span class="optional">(optional)</span></label>
+        <div class="color-picker-row">
+          <select id="input-font">
+            <option value="">Default Font</option>
+            <option value="Inter">Inter</option>
+            <option value="Roboto">Roboto</option>
+            <option value="Outfit">Outfit</option>
+            <option value="Oswald">Oswald</option>
+            <option value="Playfair Display">Playfair Display</option>
+            <option value="Press Start 2P">Press Start 2P</option>
+            <option value="Cinzel">Cinzel</option>
+            <option value="Bebas Neue">Bebas Neue</option>
+            <option value="Arial">Arial</option>
+            <option value="Verdana">Verdana</option>
+            <option value="Tahoma">Tahoma</option>
+            <option value="Trebuchet MS">Trebuchet MS</option>
+            <option value="Times New Roman">Times New Roman</option>
+            <option value="Georgia">Georgia</option>
+            <option value="Garamond">Garamond</option>
+            <option value="Courier New">Courier New</option>
+            <option value="Impact">Impact</option>
+            <option value="Comic Sans MS">Comic Sans MS</option>
+          </select>
+          <input type="color" id="input-color" value="#ffffff" />
+          <div class="color-preview" id="color-preview-text">#ffffff</div>
+        </div>
+      </div>
+      <div class="field-group">
+        <label>Executable (.exe)</label>
+        <div class="file-row">
+          <input type="text" id="input-exe" placeholder="Path to .exe" readonly />
+          <button class="glass-btn small" id="btn-pick-exe">Browse</button>
+        </div>
+      </div>
+      <div class="field-group">
+        <label>Logo <span class="optional">(transparent PNG)</span></label>
+        <div class="file-row">
+          <img id="edit-logo-preview-img" src="" alt="" style="display:none; max-height: 48px; max-width: 200px; object-fit: contain; border-radius: 4px; flex-shrink: 1;" />
+          <button class="glass-btn small" id="btn-pick-logo">Browse</button>
+        </div>
+      </div>
+      <div class="field-group">
+        <label>Background Wallpaper <span class="optional">(optional)</span></label>
+        <div class="file-row">
+          <img id="edit-wallpaper-preview-img" src="" alt="" style="display:none; max-height: 48px; max-width: 200px; object-fit: contain; border-radius: 4px; flex-shrink: 1;" />
+          <button class="glass-btn small" id="btn-pick-wallpaper-modal">Browse</button>
+        </div>
+      </div>
+      <div id="modal-actions">
+        <button class="glass-btn" id="btn-modal-cancel">Cancel</button>
+        <button class="glass-btn" id="btn-modal-save">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- LAUNCH MODE MODAL (gamepad flow) -->
+  <div id="launch-overlay" class="hidden">
+    <div id="launch-modal" class="glass-panel">
+      <div id="launch-logo-area">
+        <img id="launch-logo-img" src="" alt="" />
+        <div id="launch-game-name"></div>
+      </div>
+      <div id="launch-question">How do you want to launch?</div>
+      <div id="launch-buttons">
+        <button class="launch-choice glass-btn" id="btn-launch-mode-normal">
+          <span class="lc-icon">▶</span>
+          <span class="lc-label">Normal</span>
+          <span class="lc-sub">Standard Windows</span>
+        </button>
+        <button class="launch-choice glass-btn" id="btn-launch-mode-xbox">
+          <span class="lc-icon">⬡</span>
+          <span class="lc-label">Xbox Mode</span>
+          <span class="lc-sub">Win+F11 → launch</span>
+        </button>
+      </div>
+      <button class="glass-btn" id="btn-launch-cancel" style="width:100%;margin-top:8px;">Cancel</button>
+    </div>
+  </div>
+  <!-- RESTORE MODAL -->
+  <div id="restore-overlay" class="hidden">
+    <div id="restore-modal" class="glass-panel" style="width: 400px;">
+      <div id="restore-title" style="font-family: 'Oswald', sans-serif; font-size: 24px; font-weight: 700; color: #fff; margin-bottom: 5px;">RESTORE SAVE</div>
+      <div id="restore-subtitle" style="margin-bottom: 20px; color: rgba(255,255,255,0.7); font-size: 14px;">Select a backup snapshot to restore. This will overwrite current save files.</div>
+      <div id="restore-list" style="display: flex; flex-direction: column; gap: 10px; max-height: 200px; overflow-y: auto; margin-bottom: 20px;">
+        <!-- Backup items injected here -->
+      </div>
+      <div id="restore-actions" style="display: flex; gap: 10px; justify-content: flex-end;">
+        <button class="glass-btn" id="btn-restore-cancel">Cancel</button>
+      </div>
+    </div>
+  </div>
+  <!-- UNINSTALL MODAL -->
+  <div id="uninstall-overlay" class="hidden">
+    <div id="uninstall-modal" class="glass-panel" style="width: 450px;">
+      <div id="uninstall-title" style="font-family: 'Oswald', sans-serif; font-size: 24px; font-weight: 700; color: #ff4444; margin-bottom: 5px;">REMOVE GAME</div>
+      <div id="uninstall-subtitle" style="margin-bottom: 20px; color: rgba(255,255,255,0.7); font-size: 14px;">How would you like to remove this game?</div>
+      
+      <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px;">
+        <button class="glass-btn" id="btn-uninstall-run" style="display: none; border-color: #ffaa00; color: #ffffff;">Run Uninstaller (unins000.exe)</button>
+        <button class="glass-btn" id="btn-uninstall-delete" style="border-color: #ff4444; color: #ffffff;">Delete Game Folder Permanently</button>
+        <button class="glass-btn" id="btn-uninstall-remove" style="color: #ffffff;">Just Remove from Launcher</button>
+      </div>
+
+      <div id="uninstall-actions" style="display: flex; justify-content: center;">
+        <button class="glass-btn small" id="btn-uninstall-cancel">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- BACKUP NAME MODAL -->
+  <div id="backup-name-overlay" class="hidden">
+    <div id="backup-name-modal" class="glass-panel" style="width: 350px;">
+      <div style="font-family: 'Oswald', sans-serif; font-size: 20px; font-weight: 700; color: #fff; margin-bottom: 5px;">NAME YOUR BACKUP</div>
+      <div style="margin-bottom: 15px; color: rgba(255,255,255,0.7); font-size: 14px;">Enter a custom name for this backup (optional):</div>
+      <input type="text" id="input-backup-name" class="glass-input" placeholder="e.g. Before Boss Fight" style="width: 100%; margin-bottom: 20px;">
+      <div style="display: flex; gap: 10px; justify-content: flex-end;">
+        <button class="glass-btn small" id="btn-backup-name-cancel">Cancel</button>
+        <button class="glass-btn small highlight" id="btn-backup-name-ok">Backup</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

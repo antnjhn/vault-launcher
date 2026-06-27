@@ -1,0 +1,32 @@
+# Dependencies
+node_modules/
+
+# Build output
+src-tauri/target/
+src-tauri/gen/schemas/
+
+# OS files
+Thumbs.db
+.DS_Store
+Desktop.ini
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log
+
+# Lock files (optional - uncomment if you want to exclude)
+# package-lock.json
+# src-tauri/Cargo.lock
+
+# Temporary/scratch files
+crop.js
+crop_square.js
+cropped_icon.png
+cropped_icon_2.png
+cropped_icon_square.png
+icon_squared.png
