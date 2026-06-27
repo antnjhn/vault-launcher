@@ -1,22 +1,20 @@
 <p align="center">
-  <img src="assets/icon.png" width="100" alt="VAULT Logo" />
+  <img src="assets/icon.png" width="400" alt="VAULT" />
 </p>
 
 <h1 align="center">VAULT</h1>
 
 <p align="center">
-  <b>A game launcher for Windows with controller support and local save management</b>
+  A game launcher for Windows. Controller-first, no frills, keeps your saves safe.
 </p>
 
 <p align="center">
   <a href="https://github.com/antnjhn/vault-launcher/releases/latest">
     <img src="https://img.shields.io/github/v/release/antnjhn/vault-launcher?style=flat-square&color=7c4dff" alt="Latest Release" />
   </a>
-  <a href="LICENSE">
-    <img src="https://img.shields.io/badge/license-MIT-blue?style=flat-square" alt="License" />
-  </a>
+  <img src="https://img.shields.io/badge/license-MIT-blue?style=flat-square" alt="License" />
   <img src="https://img.shields.io/badge/platform-Windows-0078d4?style=flat-square" alt="Platform" />
-  <img src="https://img.shields.io/badge/built_with-Tauri_2-ffc131?style=flat-square" alt="Built with Tauri" />
+  <img src="https://img.shields.io/badge/built_with-Tauri_2-ffc131?style=flat-square" alt="Built with Tauri 2" />
 </p>
 
 <p align="center">
@@ -26,103 +24,102 @@
 
 ---
 
-## Features
+VAULT is a personal game launcher built for people who want something that feels like a console dashboard on a PC. Navigate with a controller, set up your library however you want, and never think about saves again.
 
-- **Controller Support** — Navigate the library using a gamepad (Xbox layout supported).
-- **Per-Game Backgrounds** — Supports custom background images that crossfade during navigation.
-- **Custom Cover Art** — Import logos and customize typography per game.
-- **Playtime Tracking** — Records session count, total playtime, and last played date.
-- **Save Management** — Automatic save location detection. Supports manual and automatic backups with one-click restore.
-- **Uninstaller Integration** — Detects `unins000.exe` to offer uninstallation directly from the launcher.
-- **State Detection** — Grays out games if the executable is no longer found on disk.
-- **Xbox Mode** — Optional integration to launch games via Windows 11 Xbox Mode.
-- **Frameless UI** — Fullscreen, minimal interface without window borders.
+---
+
+## What it does
+
+**Controller navigation** — Full gamepad support with Xbox button layout. Browse and launch everything without touching a keyboard.
+
+**Per-game backgrounds and cover art** — Custom background images that crossfade during navigation. Import logos and customize typography per game.
+
+**Playtime tracking** — Tracks session count, total hours, and last played date. Stored locally, nothing sent anywhere.
+
+**Save management** — Detects save locations on first launch and backs them up automatically when you close a game. Manual backups are one click. Restoring is just picking from a list.
+
+**State detection** — Games gray out if their executable is no longer found on disk.
+
+**Uninstaller integration** — Detects `unins000.exe` and lets you uninstall directly from the launcher.
+
+**Frameless fullscreen UI** — No window chrome, no taskbar bleed. Fills the screen and gets out of the way.
+
+---
+
+## Planned
+
+- [ ] Linux support (via AppImage / .deb)
+- [ ] Cloud save sync (Google Drive / OneDrive)
+- [ ] Multi-monitor support
+- [ ] Auto-update on launch
 
 ---
 
 ## Installation
 
-### Pre-built Binaries
+Download the latest build from the [Releases](https://github.com/antnjhn/vault-launcher/releases/latest) page.
 
-Visit the [Releases](https://github.com/antnjhn/vault-launcher/releases/latest) page to download the latest version:
+| File | Type |
+|------|------|
+| `vault-launcher_0.1.0_x64-setup.exe` | NSIS installer |
 
-- **`vault-launcher_x.x.x_x64-setup.exe`** (NSIS installer)
+> Windows may show a SmartScreen warning since the binary is unsigned. Click **More info** then **Run anyway**. This is expected for indie software without a code signing certificate.
 
-### Build from Source
+---
 
-**Prerequisites:**
-- [Node.js](https://nodejs.org) (LTS)
-- [Rust](https://www.rust-lang.org/tools/install)
-- Windows 10/11
+## Build from source
+
+**Prerequisites:** Node.js (LTS), Rust, Windows 10 or 11.
 
 ```bash
 git clone https://github.com/antnjhn/vault-launcher.git
 cd vault-launcher
-
 npm install
 npm run build
 ```
 
-The compiled binaries will be output to `src-tauri/target/release/bundle/`.
+Compiled binaries output to `src-tauri/target/release/bundle/`.
 
 ---
 
-## Controls
+## Save management
 
-| Controller | Keyboard | Action |
-|---|---|---|
-| Left Stick Up/Down | Arrow Up/Down | Navigate game list |
-| D-Pad Up/Down | Arrow Up/Down | Navigate game list |
-| Right / D-Right | Arrow Right | Open game details |
-| Left / D-Left | Arrow Left | Close details / Back |
-| A | Enter | Open details / Launch game |
-| B | Escape | Back / Close |
-| X | — | Edit selected game |
-| Y | — | Add new game |
+Save locations are detected automatically when you add a game. From the details panel:
+
+| Action | What it does |
+|--------|--------------|
+| `BACKUP` | Takes a named snapshot of the current save state |
+| `RESTORE` | Lists available backups labeled `AUTO` or `MANUAL` — pick one to restore or delete |
+
+Automatic backups run every time a game exits.
 
 ---
 
-## Usage
+## Data storage
 
-### Adding Games
+Everything stays local. Nothing leaves your machine.
 
-1. Press **Y** on the controller or click **+** in the top-left.
-2. Enter the game title.
-3. Select the target `.exe` file.
-4. (Optional) Provide a cover art image and background wallpaper.
-5. Save the configuration.
-
-### Save Management
-
-Save files are detected automatically upon first launch. In the details panel:
-
-- **BACKUP** — Creates a named snapshot of the current save state.
-- **RESTORE** — Displays available backups (marked as `AUTO` or `MANUAL`) for restoration or deletion.
-
-Automatic backups are generated upon game exit.
-
----
-
-## Data Storage
-
-Application data is stored locally at:
 ```
 %APPDATA%\com.vault.launcher\
-├── games.json          # Game library metadata
-├── wallpapers/         # Background images
-└── backups/            # Compressed save backups
+├── games.json       # library metadata
+├── wallpapers/      # background images
+└── backups/         # compressed save snapshots
 ```
 
 ---
 
-## Technology Stack
+## Stack
 
-- [Tauri 2](https://v2.tauri.app/)
-- Rust (Backend process management and filesystem operations)
-- Vanilla JS/CSS/HTML (Frontend)
+| Layer | Technology |
+|-------|------------|
+| Shell | [Tauri 2](https://v2.tauri.app/) |
+| Backend | Rust — process management and filesystem ops |
+| Frontend | Vanilla HTML / CSS / JS |
 
 ---
 
 ## License
 
-[MIT](LICENSE) © antnjhn
+[![MIT License](https://img.shields.io/badge/license-MIT-blue?style=flat-square)](LICENSE)
+
+MIT. Do whatever you want with it.
