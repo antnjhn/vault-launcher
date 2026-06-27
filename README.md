@@ -5,12 +5,12 @@
 <h1 align="center">VAULT</h1>
 
 <p align="center">
-  <b>A fast, aesthetic game launcher with controller support, save management, and Xbox Mode</b>
+  <b>A game launcher for Windows with controller support and local save management</b>
 </p>
 
 <p align="center">
-  <a href="https://github.com/anthn/vault-launcher/releases/latest">
-    <img src="https://img.shields.io/github/v/release/anthn/vault-launcher?style=flat-square&color=7c4dff" alt="Latest Release" />
+  <a href="https://github.com/antnjhn/vault-launcher/releases/latest">
+    <img src="https://img.shields.io/github/v/release/antnjhn/vault-launcher?style=flat-square&color=7c4dff" alt="Latest Release" />
   </a>
   <a href="LICENSE">
     <img src="https://img.shields.io/badge/license-MIT-blue?style=flat-square" alt="License" />
@@ -21,28 +21,28 @@
 
 ---
 
-## ✨ Features
+## Features
 
-- 🎮 **Full Controller Support** — Navigate your entire library with a gamepad (Xbox recommended)
-- 🖼️ **Per-Game Wallpapers** — Set custom backgrounds that crossfade as you browse
-- 🎨 **Custom Cover Art** — Import logos and set custom fonts/colors per game
-- ⏱️ **Playtime Tracking** — Automatic session counting, total playtime, and last played date
-- 💾 **Save Backup & Restore** — Automatic save detection with manual/auto backup, custom naming, and one-click restore
-- 🗑️ **Smart Uninstaller** — Detects `unins000.exe` and offers run uninstaller / delete folder / remove from launcher
-- 🔍 **Installation Detection** — Automatically detects if a game is uninstalled and grays it out
-- 🕹️ **Xbox Mode** — Launch games in Windows 11 Xbox Mode with one click
-- 🖥️ **Fullscreen & Frameless** — Immersive, distraction-free UI
+- **Controller Support** — Navigate the library using a gamepad (Xbox layout supported).
+- **Per-Game Backgrounds** — Supports custom background images that crossfade during navigation.
+- **Custom Cover Art** — Import logos and customize typography per game.
+- **Playtime Tracking** — Records session count, total playtime, and last played date.
+- **Save Management** — Automatic save location detection. Supports manual and automatic backups with one-click restore.
+- **Uninstaller Integration** — Detects `unins000.exe` to offer uninstallation directly from the launcher.
+- **State Detection** — Grays out games if the executable is no longer found on disk.
+- **Xbox Mode** — Optional integration to launch games via Windows 11 Xbox Mode.
+- **Frameless UI** — Fullscreen, minimal interface without window borders.
 
 ---
 
-## 📥 Installation
+## Installation
 
-### Download (Recommended)
+### Pre-built Binaries
 
-Go to the [**Releases**](https://github.com/anthn/vault-launcher/releases/latest) page and download:
+Visit the [Releases](https://github.com/antnjhn/vault-launcher/releases/latest) page to download the latest version:
 
-- **`vault-launcher_x.x.x_x64-setup.exe`** — NSIS installer (recommended)
-- **`vault-launcher_x.x.x_x64_en-US.msi`** — Windows Installer package
+- **`vault-launcher_x.x.x_x64-setup.exe`** (NSIS installer)
+- **`vault-launcher_x.x.x_x64_en-US.msi`** (Windows Installer)
 
 ### Build from Source
 
@@ -52,32 +52,25 @@ Go to the [**Releases**](https://github.com/anthn/vault-launcher/releases/latest
 - Windows 10/11
 
 ```bash
-# Clone the repo
-git clone https://github.com/anthn/vault-launcher.git
+git clone https://github.com/antnjhn/vault-launcher.git
 cd vault-launcher
 
-# Install dependencies
 npm install
-
-# Run in development mode
-npm start
-
-# Build production release
 npm run build
 ```
 
-The built executables will be in `src-tauri/target/release/bundle/`.
+The compiled binaries will be output to `src-tauri/target/release/bundle/`.
 
 ---
 
-## 🎮 Controls
+## Controls
 
 | Controller | Keyboard | Action |
 |---|---|---|
-| Left Stick ↑↓ | Arrow Up/Down | Navigate game list |
-| D-Pad ↑↓ | Arrow Up/Down | Navigate game list |
-| Right → / D-Right | Arrow Right | Open game details |
-| Left ← / D-Left | Arrow Left | Close details / Back |
+| Left Stick Up/Down | Arrow Up/Down | Navigate game list |
+| D-Pad Up/Down | Arrow Up/Down | Navigate game list |
+| Right / D-Right | Arrow Right | Open game details |
+| Left / D-Left | Arrow Left | Close details / Back |
 | A | Enter | Open details / Launch game |
 | B | Escape | Back / Close |
 | X | — | Edit selected game |
@@ -85,48 +78,47 @@ The built executables will be in `src-tauri/target/release/bundle/`.
 
 ---
 
-## 🕹️ Adding Games
+## Usage
 
-1. Press **Y** on controller or click **+** in the top-left
-2. Enter the game name
-3. Browse to the `.exe` file
-4. Optionally pick a cover art image (logo)
-5. Optionally pick a background wallpaper
-6. Hit **Save Game**
+### Adding Games
+
+1. Press **Y** on the controller or click **+** in the top-left.
+2. Enter the game title.
+3. Select the target `.exe` file.
+4. (Optional) Provide a cover art image and background wallpaper.
+5. Save the configuration.
+
+### Save Management
+
+Save files are detected automatically upon first launch. In the details panel:
+
+- **BACKUP** — Creates a named snapshot of the current save state.
+- **RESTORE** — Displays available backups (marked as `AUTO` or `MANUAL`) for restoration or deletion.
+
+Automatic backups are generated upon game exit.
 
 ---
 
-## 💾 Save Management
+## Data Storage
 
-VAULT automatically detects save files when you launch a game for the first time. From the game details panel:
-
-- **BACKUP** — Create a named manual backup of your saves
-- **RESTORE** — Browse all backups (tagged as `AUTO` or `MANUAL`), restore or delete them
-
-Automatic backups are created every time you close a game.
-
----
-
-## 📂 Data Storage
-
-All data is stored in:
+Application data is stored locally at:
 ```
 %APPDATA%\com.vault.launcher\
-├── games.json          # Game library
-├── wallpapers/         # Copied wallpaper images
-└── backups/            # Save file backups (per game)
+├── games.json          # Game library metadata
+├── wallpapers/         # Background images
+└── backups/            # Compressed save backups
 ```
 
 ---
 
-## 🛠️ Tech Stack
+## Technology Stack
 
-- **[Tauri 2](https://v2.tauri.app/)** — Lightweight native app framework
-- **Rust** — Backend (save detection, backup/restore, process management)
-- **Vanilla JS/CSS/HTML** — Frontend (no framework overhead)
+- [Tauri 2](https://v2.tauri.app/)
+- Rust (Backend process management and filesystem operations)
+- Vanilla JS/CSS/HTML (Frontend)
 
 ---
 
-## 📄 License
+## License
 
-[MIT](LICENSE) © anthn
+[MIT](LICENSE) © antnjhn
