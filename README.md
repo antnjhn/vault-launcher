@@ -19,6 +19,11 @@
   <img src="https://img.shields.io/badge/built_with-Tauri_2-ffc131?style=flat-square" alt="Built with Tauri" />
 </p>
 
+<p align="center">
+  <img src="assets/ss-1.png" width="49%" alt="VAULT Screenshot 1" />
+  <img src="assets/ss-2.png" width="49%" alt="VAULT Screenshot 2" />
+</p>
+
 ---
 
 ## Features
