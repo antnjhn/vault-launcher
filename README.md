@@ -47,7 +47,6 @@
 Visit the [Releases](https://github.com/antnjhn/vault-launcher/releases/latest) page to download the latest version:
 
 - **`vault-launcher_x.x.x_x64-setup.exe`** (NSIS installer)
-- **`vault-launcher_x.x.x_x64_en-US.msi`** (Windows Installer)
 
 ### Build from Source
 
