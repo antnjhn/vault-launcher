@@ -2,7 +2,7 @@
   <img src="assets/icon.png" width="400" alt="VAULT" />
 </p>
 
-<h1 align="center">VAULT</h1>
+<h1 align="center">SILO</h1>
 
 <p align="center">
   A game launcher for Windows. Controller-first, no frills, keeps your saves safe.
@@ -24,7 +24,7 @@
 
 ---
 
-VAULT is a personal game launcher built for people who want something that feels like a console dashboard on a PC. Navigate with a controller, set up your library however you want, and never think about saves again.
+SILO is a personal game launcher built for people who want something that feels like a console dashboard on a PC. Navigate with a controller, set up your library however you want, and never think about saves again.
 
 ---
 
